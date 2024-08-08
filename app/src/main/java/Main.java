@@ -1,18 +1,24 @@
-package samples;
+import hr.HR;
 
-import java.sql.*;
-import java.util.HashMap;
-
-public class JavaWithMysql {
+public class  Main{
     static final String DB_URL = "jdbc:mysql://localhost/java_mysql";   // container name
-    static final String USER = "";
-    static final String PASS = "";
+    static final String USER = "cocolabhub";
+    static final String PASS = "1234";
 
     public static void main(String[] args) {
-        Connection conn = null;
+        HR hr = HR.getInstance();
+        hr.run();
+    }
+}
+
+
+/*
+
+
+Connection conn = null;
         Statement stmt = null;
         HashMap<Integer, HashMap<String, Object>> data = new HashMap<>();
-        
+
         try {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
@@ -30,7 +36,7 @@ public class JavaWithMysql {
                 int pk_id = rs.getInt("pk_id");
                 String column1 = rs.getString("column1");
                 String column2 = rs.getString("column2");
-                
+
                 HashMap<String, Object> row = new HashMap<>();
                 row.put("column1", column1);
                 row.put("column2", column2);
@@ -64,5 +70,8 @@ public class JavaWithMysql {
                 se.printStackTrace();
             }
         }
-    }
-}
+
+
+
+
+ */
