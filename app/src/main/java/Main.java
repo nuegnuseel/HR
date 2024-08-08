@@ -1,11 +1,14 @@
 import hr.HR;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 public class  Main{
     static final String DB_URL = "jdbc:mysql://localhost/java_mysql";   // container name
     static final String USER = "cocolabhub";
     static final String PASS = "1234";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, SQLException {
         HR hr = HR.getInstance();
         hr.run();
     }

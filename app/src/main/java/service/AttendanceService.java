@@ -1,5 +1,10 @@
 package service;
 
+import db.MysqlConfig;
+import db.MysqlConnection;
+
+import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,26 +16,33 @@ public class AttendanceService {
 
     static private AttendanceService attendanceService;
 
-    private AttendanceService() {
-        if(menuList == null) {
+    static private MysqlConnection mysqlConnection;
+    static private Connection connection;
+
+    private AttendanceService() throws IOException {
+        if (menuList == null) {
             menuList = new ArrayList<String>();
             initMenuList();
         }
 
-        if(scanner == null) {
+        if (scanner == null) {
             scanner = new Scanner(System.in);
+        }
+
+        if (mysqlConnection == null) {
+            mysqlConnection = MysqlConnection.from(MysqlConfig.getInstance());
         }
     }
 
-    public static AttendanceService getInstance() {
-        if(attendanceService == null) {
+    public static AttendanceService getInstance() throws IOException {
+        if (attendanceService == null) {
             attendanceService = new AttendanceService();
         }
         return attendanceService;
     }
 
 
-    private void initMenuList () {
+    private void initMenuList() {
         menuList.add("근태 입력");
         menuList.add("근태 수정");
         menuList.add("근태 삭제");
@@ -57,7 +69,7 @@ public class AttendanceService {
         System.out.println("0. 메인 메뉴로 돌아가기\n");
     }
 
-    private void router(int select) {
+    private void router(int select, Connection connection) {
         switch (select) {
             case 1:
                 insert();
@@ -69,10 +81,10 @@ public class AttendanceService {
                 delete();
                 break;
             case 4:
-                memberCurrentByMonth();
+                memberCurrentByMonth(connection);
                 break;
             case 5:
-                deptCurrentByMonth();
+                deptCurrentByMonth(connection);
                 break;
             default:
                 break;
@@ -80,7 +92,8 @@ public class AttendanceService {
     }
 
     private void insert() {
-        System.out.println("근태 입력하는 함수");
+        System.out.print("직원 ID 입력: ");
+
     }
 
     private void update() {
@@ -91,22 +104,43 @@ public class AttendanceService {
         System.out.println("근태 삭제 함수");
     }
 
-    private void memberCurrentByMonth() {
+    private void memberCurrentByMonth(Connection connection) {
         System.out.println("직원별 월별 근태 현황 보기");
     }
 
-    private void deptCurrentByMonth() {
+    private void deptCurrentByMonth(Connection connection) {
         System.out.println("부서별 월별 근태 현황 보기");
+        String sql = "SELECT u.User_ID, ca.Attend_No, u.`user`, ca.date \n" +
+                "FROM checkattend ca \n" +
+                "INNER JOIN checkdept cd ON ca.User_ID = cd.User_ID2\n" +
+                "INNER JOIN dept d ON cd.Dept_ID = d.Dept_ID AND d.dept = ?\n" +
+                "INNER JOIN `user` u ON ca.User_ID = u.User_ID\n" +
+                "WHERE SUBSTRING(ca.date, 6, 2) = '08'\n" +
+                "GROUP BY u.User_ID, ca.Attend_No, u.`user`, ca.date;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "품질관리팀");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int idx = 1;
+                String value = resultSet.getString(idx);
+                System.out.println(value);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void run() {
-        while(true) {
+    public void run() throws SQLException {
+        connection = mysqlConnection.getConnection();
+        while (true) {
             printMenu();
             int select = getSelect();
-            if(select == 0) {
+            if (select == 0) {
                 break;
             }
-            router(select);
+            router(select, connection);
         }
+        mysqlConnection.retrieveConnection(connection);
     }
 }

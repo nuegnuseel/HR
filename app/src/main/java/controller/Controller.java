@@ -2,6 +2,9 @@ package controller;
 
 import service.AttendanceService;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 public class Controller {
     static private Controller controller;
 
@@ -12,7 +15,7 @@ public class Controller {
         return controller;
     }
 
-    public static void router(int select) {
+    public static void router(int select) throws IOException, SQLException {
         switch (select) {
             case 1:
                 break;
