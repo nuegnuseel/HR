@@ -1,6 +1,7 @@
 package hr;
 
 import cli.CLI;
+import controller.Controller;
 
 public class HR {
     private static CLI cli;
@@ -17,7 +18,6 @@ public class HR {
         return hr;
     }
 
-
     public void run() {
         while(true) {
             cli.printSystemMenu();
@@ -25,6 +25,7 @@ public class HR {
             if(select == 0) {
                 break;
             }
+            Controller.router(select);
         }
     }
 }
