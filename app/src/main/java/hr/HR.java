@@ -2,9 +2,13 @@ package hr;
 
 import cli.CLI;
 import controller.Controller;
+import db.MysqlConfig;
+import db.MysqlConnection;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HR {
     private static CLI cli;
@@ -30,5 +34,6 @@ public class HR {
             }
             Controller.router(select);
         }
+        MysqlConnection.from(MysqlConfig.getInstance()).clear();
     }
 }
