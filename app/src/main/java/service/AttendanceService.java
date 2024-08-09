@@ -107,11 +107,28 @@ public class AttendanceService {
     }
 
     private void delete() {
-        System.out.println("근태 삭제 함수");
+        System.out.println("==== 근태 삭제 ====\n");
+        System.out.print("직원 ID: ");
+        String userId = scanner.nextLine().trim();
+        System.out.print("삭제할 날짜: ");
+        String date = scanner.nextLine().trim();
+        String sql = "DELETE FROM checkattend WHERE User_ID = ? AND `date` = ?;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userId);
+            preparedStatement.setString(2, date);
+            int result = preparedStatement.executeUpdate();
+            if(result > 0) {
+                System.out.println("근태 정보가 삭제되었습니다.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void memberCurrentByMonth(Connection connection) {
         System.out.println("직원별 월별 근태 현황 보기");
+        System.out.print("");
     }
 
     private void personalCurrentByMonth(Connection connection) {
