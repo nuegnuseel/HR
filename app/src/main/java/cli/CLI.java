@@ -54,8 +54,7 @@ public class CLI {
         IntStream.rangeClosed(1, menuList.size()).forEach(index -> {
             System.out.println(index + ". " + menuList.get(index - 1));
         });
-        System.out.println("0. 종료");
-        System.out.println("");
+        System.out.println("0. 종료\n");
     }
 
 }
