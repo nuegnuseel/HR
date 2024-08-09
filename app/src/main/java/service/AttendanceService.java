@@ -98,7 +98,23 @@ public class AttendanceService {
     }
 
     private void insert() {
-        System.out.print("직원 ID 입력: ");
+        System.out.println("==== 근태 입력 ====\n");
+        System.out.print("직원 ID: ");
+        String userId = scanner.nextLine().trim();
+        System.out.print("삭제할 날짜: ");
+        String date = scanner.nextLine().trim();
+        String sql = "insert into checkattend values(?, ?, ?, ?);";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userId);
+            preparedStatement.setString(2, date);
+            int result = preparedStatement.executeUpdate();
+            if(result > 0) {
+                System.out.println("근태 정보가 삭제되었습니다.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
