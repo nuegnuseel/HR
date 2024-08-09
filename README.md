@@ -1,12 +1,16 @@
-## java_mysql
-#### Main package
+## HR
+#### Requirement
 - java:17
 - mysql:8
 
-#### CLI with Dockerfile and compose.xml : duration 150.4s
+#### Config
 ```
-# --project-name is docker container name
-~$ docker-compose --project-name java_mysql up -d --build
+db.url=[MySQL server URL]
+db.username=[Database username]
+db.password=[Password]
+db.poolsize=[Size of connection pool]
 ```
-#### samples
-- [samples/JavaWithMysql.java](./app/src/main/java/samples/JavaWithMysql.java)
+#### Content
+- Create and remove attendance records
+- View attendance list for a department by month
+- View personal attendance records by month
