@@ -6,6 +6,7 @@ import dto.UserAttend;
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -98,7 +99,46 @@ public class AttendanceService {
     }
 
     private void insert() {
+
+        System.out.println("==== 근태 입력 ====\n");
         System.out.print("직원 ID 입력: ");
+        String id = scanner.nextLine().trim();
+        System.out.print("날짜 입력: ");
+        String date = scanner.nextLine().trim();
+        System.out.print("근무 상태 입력 (출근/결근/휴가 등): ");
+        String status = scanner.nextLine().trim();
+        String attendId = statusToAttendId(status);
+
+        String sql = "INSERT INTO checkattend VALUES (?,?,?,?);";
+
+        SecureRandom sr = new SecureRandom();
+        int randomId = Math.abs(sr.nextInt()%1000) + 100;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "CA_" + randomId);
+            preparedStatement.setString(2, attendId);
+            preparedStatement.setString(3, id);
+            preparedStatement.setString(4, date);
+            int result = preparedStatement.executeUpdate();
+            if(result > 0) {
+                System.out.println("근태 정보가 입력되었습니다.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    private String statusToAttendId(String status){
+
+        switch (status){
+            case "출근": return "No_01";
+            case "결근": return "No_02";
+            case "휴가": return "No_03";
+            default: return "";
+        }
 
     }
 
